@@ -1,0 +1,114 @@
+@import "tailwindcss";
+
+/*
+  Baby food tracker — "warm paper" theme
+  Inspired by the calm, breathy, amber-lit feel of the Daylight Computer.
+  Low contrast, no pure white, no pure black, generous air.
+*/
+
+@theme {
+  --color-paper: #f3ecdf;
+  --color-paper-raised: #fbf6ec;
+  --color-paper-sunk: #ece2d2;
+  --color-ink: #33302a;
+  --color-ink-soft: #6f665a;
+  --color-ink-faint: #a79c8c;
+  --color-line: #e2d8c6;
+  --color-line-soft: #ebe2d3;
+  --color-amber: #bd7b43;
+  --color-amber-soft: #e9d3b6;
+  --color-amber-tint: #f5e7d3;
+  --color-autumn: #c17a4b;
+  --color-alma: #8a8f6b;
+  --color-sage: #8a8f6b;
+  --color-sage-tint: #e7e8da;
+
+  --font-serif: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  --radius-card: 20px;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overscroll-behavior-y: none;
+  }
+
+  /* A soft paper grain / warmth gradient behind everything */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background:
+      radial-gradient(120% 80% at 50% -10%, #f7f0e4 0%, transparent 55%),
+      radial-gradient(90% 60% at 100% 100%, #efe4d1 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  ::selection {
+    background: var(--color-amber-soft);
+    color: var(--color-ink);
+  }
+
+  button {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+}
+
+@layer utilities {
+  .font-serif {
+    font-family: var(--font-serif);
+  }
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+  /* hide scrollbar for horizontal scrollers, keep it clean */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .animate-rise {
+    animation: rise 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  @keyframes soft-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  .animate-soft-in {
+    animation: soft-in 0.5s ease both;
+  }
+}
