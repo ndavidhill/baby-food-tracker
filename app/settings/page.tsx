@@ -5,6 +5,7 @@ import { useProfilesStore } from "@/lib/profiles";
 import { ageLabel } from "@/lib/date";
 import { stageFor, STAGE_DISCLAIMER } from "@/lib/stages";
 import { Card } from "@/components/common";
+import { Account } from "@/components/auth/Account";
 import { CloseIcon } from "@/components/icons";
 
 const COLOR_PRESETS = [
@@ -43,6 +44,7 @@ export default function SettingsPage() {
 
       {ready && (
         <div className="space-y-5">
+          <Account />
           {profiles.map((p) => {
             const stage = p.birthday ? stageFor(p.birthday) : null;
             return (
