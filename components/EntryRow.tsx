@@ -10,7 +10,7 @@ import {
   babyName,
   reactionLabel,
 } from "./common";
-import { TrashIcon } from "./icons";
+import { AlertIcon, TrashIcon } from "./icons";
 
 export function EntryRow({
   entry,
@@ -24,15 +24,25 @@ export function EntryRow({
   const allergen = getFood(entry.foodId)?.allergen;
   return (
     <li className="group animate-rise">
-      <Card className="flex items-center gap-3 p-3.5">
+      <Card
+        className={`flex items-center gap-3 p-3.5 ${
+          entry.flagged ? "border-alert-soft" : ""
+        }`}
+      >
         <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
             <span className="truncate text-[15px] font-medium text-ink">
               {entry.foodName}
             </span>
             {allergen && (
               <span className="shrink-0 rounded-full bg-amber-tint px-1.5 py-0.5 text-[9.5px] font-medium uppercase tracking-wide text-amber">
                 allergen
+              </span>
+            )}
+            {entry.flagged && (
+              <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-alert-tint px-1.5 py-0.5 text-[9.5px] font-medium uppercase tracking-wide text-alert">
+                <AlertIcon className="h-2.5 w-2.5" />
+                reaction
               </span>
             )}
           </div>

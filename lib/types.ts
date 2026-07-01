@@ -59,4 +59,6 @@ export interface LogEntry {
   reaction: Reaction;
   amount: Amount;
   notes?: string;
+  /** An adverse/allergic reaction (rash, hives, swelling, tummy upset) was noted. */
+  flagged?: boolean;
 }

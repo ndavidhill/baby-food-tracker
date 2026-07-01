@@ -24,7 +24,7 @@ import {
 } from "@/lib/foods";
 import { isoDate } from "@/lib/date";
 import { useStore } from "@/lib/store";
-import { CheckIcon, CloseIcon, SearchIcon } from "./icons";
+import { AlertIcon, CheckIcon, CloseIcon, SearchIcon } from "./icons";
 
 type BabyMode = BabyId | "both";
 
@@ -84,6 +84,7 @@ function LogSheet({
   const [amount, setAmount] = useState<Amount>("some");
   const [reaction, setReaction] = useState<Reaction>("liked");
   const [notes, setNotes] = useState("");
+  const [flagged, setFlagged] = useState(false);
   const [closing, setClosing] = useState(false);
 
   // Lock body scroll while the sheet is open.
@@ -141,6 +142,7 @@ function LogSheet({
         reaction,
         amount,
         notes: notes.trim() || undefined,
+        flagged: flagged || undefined,
       });
     }
     close();
@@ -325,6 +327,43 @@ function LogSheet({
             </div>
           </Field>
 
+          {/* Reaction / allergy watch */}
+          <div className="mb-5">
+            <button
+              type="button"
+              onClick={() => setFlagged((v) => !v)}
+              aria-pressed={flagged}
+              className={`flex w-full items-center justify-between rounded-2xl border px-4 py-3 text-left transition-colors ${
+                flagged
+                  ? "border-transparent bg-alert-tint"
+                  : "border-line bg-paper"
+              }`}
+            >
+              <span className="flex items-center gap-2.5">
+                <AlertIcon
+                  className={`h-[18px] w-[18px] ${
+                    flagged ? "text-alert" : "text-ink-faint"
+                  }`}
+                />
+                <span
+                  className={`text-[15px] ${
+                    flagged ? "font-medium text-alert" : "text-ink"
+                  }`}
+                >
+                  Flag a reaction
+                </span>
+              </span>
+              <Switch on={flagged} />
+            </button>
+            {flagged && (
+              <p className="mt-2 px-1 text-[12.5px] leading-relaxed text-ink-soft">
+                Note the symptoms below — rash, hives, swelling, vomiting. If
+                breathing is affected or symptoms are severe, seek medical help
+                right away.
+              </p>
+            )}
+          </div>
+
           {/* Notes */}
           <Field label="Notes">
             <textarea
@@ -397,6 +436,22 @@ function ModeButton({
       />
       {children}
     </button>
+  );
+}
+
+function Switch({ on }: { on: boolean }) {
+  return (
+    <span
+      className={`relative inline-flex h-6 w-10 shrink-0 items-center rounded-full transition-colors ${
+        on ? "bg-alert" : "bg-line"
+      }`}
+    >
+      <span
+        className={`inline-block h-[18px] w-[18px] transform rounded-full bg-paper-raised shadow-sm transition-transform ${
+          on ? "translate-x-[19px]" : "translate-x-[3px]"
+        }`}
+      />
+    </span>
   );
 }
 

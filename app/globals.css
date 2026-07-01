@@ -22,6 +22,9 @@
   --color-alma: #8a8f6b;
   --color-sage: #8a8f6b;
   --color-sage-tint: #e7e8da;
+  --color-alert: #a9564a;
+  --color-alert-soft: #d99f92;
+  --color-alert-tint: #f0dcd4;
 
   --font-serif: var(--font-fraunces), Georgia, "Times New Roman", serif;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;

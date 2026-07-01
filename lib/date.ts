@@ -39,6 +39,30 @@ export function timeLabel(ts: number): string {
     .toLowerCase();
 }
 
+/** Whole days between a past timestamp and today (0 = today). */
+export function daysSince(ts: number): number {
+  const now = new Date();
+  const then = new Date(ts);
+  const d0 = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+  const d1 = new Date(
+    then.getFullYear(),
+    then.getMonth(),
+    then.getDate(),
+  ).getTime();
+  return Math.max(0, Math.round((d0 - d1) / 86_400_000));
+}
+
+/** "today" · "yesterday" · "4 days ago" · "2 wks ago" · "3 mo ago". */
+export function relativeDay(ts: number): string {
+  const days = daysSince(ts);
+  if (days === 0) return "today";
+  if (days === 1) return "yesterday";
+  if (days < 7) return `${days} days ago`;
+  if (days < 14) return "last week";
+  if (days < 60) return `${Math.round(days / 7)} wks ago`;
+  return `${Math.round(days / 30)} mo ago`;
+}
+
 /** A gentle greeting keyed to the hour. */
 export function greeting(d: Date = new Date()): string {
   const h = d.getHours();

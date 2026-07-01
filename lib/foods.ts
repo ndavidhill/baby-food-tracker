@@ -75,6 +75,20 @@ export const FOODS: Food[] = [
     note: "Fish is a common allergen. Check carefully for bones.",
   },
   { id: "chickpea", name: "Chickpea", category: "proteins" },
+  {
+    id: "almond",
+    name: "Almond",
+    category: "proteins",
+    allergen: true,
+    note: "Tree nut — smooth almond butter thinned into food, never whole nuts.",
+  },
+  {
+    id: "shrimp",
+    name: "Shrimp",
+    category: "proteins",
+    allergen: true,
+    note: "Shellfish — well-cooked and finely chopped.",
+  },
 
   // Dairy
   {

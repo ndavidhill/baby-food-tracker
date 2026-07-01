@@ -15,11 +15,16 @@ cartoons, just paper-warm tones and quiet typography.
 - **Foods** — a curated library of ~34 sensible first foods grouped by category, with
   the common allergens flagged. Each row shows, per twin, whether it's been introduced.
   Tap any food to log a taste.
-- **Journal** — the full history, grouped by day and filterable by twin, so you can
-  look back over how solids are going.
+- **Journal** — two views:
+  - *Timeline* — the full history, grouped by day and filterable by twin.
+  - *Allergens* — a dedicated tracker for the common allergens (peanut, egg, dairy,
+    sesame, wheat, soy, tree nuts, fish, shellfish). For each twin it shows whether
+    it's been introduced, how many times it's been offered and when last, a gentle
+    *"offer again"* nudge when it's been over a week, and any flagged reactions.
 
 Every meal captures **who** (Autumn, Alma, or both), **what**, **how much**
-(a taste / some / lots), **how it went** (a calm five-point scale), and optional notes.
+(a taste / some / lots), **how it went** (a calm five-point scale), an optional
+**reaction flag** for allergy watching, and notes.
 
 ## Data & privacy
 
