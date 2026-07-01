@@ -1,18 +1,25 @@
 "use client";
 
 import { useMemo } from "react";
+import Link from "next/link";
 import { useStore } from "@/lib/store";
 import { useLogSheet } from "@/components/LogSheet";
-import { isoDate, greeting } from "@/lib/date";
+import { useProfiles } from "@/lib/profiles";
+import { isoDate, greeting, ageLabel } from "@/lib/date";
+import { stageFor } from "@/lib/stages";
 import { FOODS } from "@/lib/foods";
-import { BABIES, BabyId } from "@/lib/types";
+import { BabyId } from "@/lib/types";
 import { BabyDot, Card } from "@/components/common";
 import { EntryRow } from "@/components/EntryRow";
-import { PlusIcon, SparkIcon } from "@/components/icons";
+import { PlusIcon, SettingsIcon, SparkIcon } from "@/components/icons";
 
 export default function TodayPage() {
   const { entries, ready, removeEntry } = useStore();
   const { openLog } = useLogSheet();
+  const profiles = useProfiles();
+  const title = profiles.map((p) => p.name).join(" & ");
+  const withBirthday = profiles.find((p) => p.birthday);
+  const stage = withBirthday?.birthday ? stageFor(withBirthday.birthday) : null;
   const today = isoDate();
 
   const todayEntries = useMemo(
@@ -39,25 +46,37 @@ export default function TodayPage() {
 
   return (
     <div className="animate-soft-in">
-      <header className="mb-7">
-        <p className="text-[13px] font-medium uppercase tracking-[0.16em] text-ink-faint">
-          {greeting()}
-        </p>
-        <h1 className="mt-1 font-serif text-[2rem] leading-tight text-ink">
-          Autumn &amp; Alma
-        </h1>
-        <p className="mt-1 text-[14px] text-ink-soft">
-          {new Date().toLocaleDateString(undefined, {
-            weekday: "long",
-            day: "numeric",
-            month: "long",
-          })}
-        </p>
+      <header className="mb-7 flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <p className="text-[13px] font-medium uppercase tracking-[0.16em] text-ink-faint">
+            {greeting()}
+          </p>
+          <h1 className="mt-1 font-serif text-[2rem] leading-tight text-ink">
+            {title}
+          </h1>
+          <p className="mt-1 text-[14px] text-ink-soft">
+            {new Date().toLocaleDateString(undefined, {
+              weekday: "long",
+              day: "numeric",
+              month: "long",
+            })}
+          </p>
+          {stage && (
+            <p className="mt-1 text-[13px] text-ink-faint">{stage.title}</p>
+          )}
+        </div>
+        <Link
+          href="/settings"
+          aria-label="Settings"
+          className="mt-1 grid h-9 w-9 shrink-0 place-items-center rounded-full border border-line text-ink-soft transition-colors hover:bg-paper-sunk"
+        >
+          <SettingsIcon className="h-5 w-5" />
+        </Link>
       </header>
 
       {/* Today at a glance */}
       <div className="mb-4 grid grid-cols-2 gap-3">
-        {BABIES.map((b) => (
+        {profiles.map((b) => (
           <Card key={b.id} className="p-4">
             <div className="flex items-center gap-2">
               <BabyDot id={b.id} />
@@ -65,6 +84,11 @@ export default function TodayPage() {
                 {b.name}
               </span>
             </div>
+            {b.birthday && (
+              <div className="mt-0.5 text-[12px] text-ink-faint">
+                {ageLabel(b.birthday)}
+              </div>
+            )}
             <div className="mt-3 flex items-baseline gap-1.5">
               <span className="font-serif text-[2rem] leading-none text-ink">
                 {countFor(b.id)}

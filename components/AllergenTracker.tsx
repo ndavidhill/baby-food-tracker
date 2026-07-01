@@ -11,7 +11,8 @@ import {
   introducedCount,
   primaryFoodId,
 } from "@/lib/allergens";
-import { BABIES, Baby, BabyId, LogEntry } from "@/lib/types";
+import { Baby, BabyId, LogEntry } from "@/lib/types";
+import { useProfiles } from "@/lib/profiles";
 import { daysSince, relativeDay } from "@/lib/date";
 import { Card } from "./common";
 import { AlertIcon, CheckIcon, PlusIcon, ShieldIcon } from "./icons";
@@ -22,7 +23,9 @@ const OFFER_AGAIN_DAYS = 7;
 
 export function AllergenTracker({ filter }: { filter: BabyFilter }) {
   const { entries, ready } = useStore();
-  const babies = filter === "all" ? BABIES : BABIES.filter((b) => b.id === filter);
+  const allProfiles = useProfiles();
+  const babies =
+    filter === "all" ? allProfiles : allProfiles.filter((b) => b.id === filter);
 
   if (!ready) return null;
 

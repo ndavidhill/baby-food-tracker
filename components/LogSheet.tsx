@@ -11,7 +11,6 @@ import {
 import {
   Amount,
   AMOUNTS,
-  BABIES,
   BabyId,
   Reaction,
   REACTIONS,
@@ -24,6 +23,7 @@ import {
 } from "@/lib/foods";
 import { isoDate } from "@/lib/date";
 import { useStore } from "@/lib/store";
+import { useProfiles } from "@/lib/profiles";
 import { AlertIcon, CheckIcon, CloseIcon, SearchIcon } from "./icons";
 
 type BabyMode = BabyId | "both";
@@ -31,6 +31,8 @@ type BabyMode = BabyId | "both";
 interface Prefill {
   foodId?: string;
   babyId?: BabyId;
+  /** When set, the sheet edits this existing entry instead of creating one. */
+  entryId?: string;
 }
 
 interface LogSheetValue {
@@ -76,15 +78,34 @@ function LogSheet({
   prefill: Prefill;
   onClose: () => void;
 }) {
-  const { addEntry } = useStore();
-  const [babyMode, setBabyMode] = useState<BabyMode>(prefill.babyId ?? "both");
-  const [foodId, setFoodId] = useState<string | null>(prefill.foodId ?? null);
-  const [customFood, setCustomFood] = useState<string>("");
+  const { entries, addEntry, updateEntry, removeEntry } = useStore();
+  const existing = prefill.entryId
+    ? entries.find((e) => e.id === prefill.entryId)
+    : undefined;
+  const editing = !!existing;
+  const profiles = useProfiles();
+  const autumn = profiles.find((p) => p.id === "autumn")!;
+  const alma = profiles.find((p) => p.id === "alma")!;
+  const [babyMode, setBabyMode] = useState<BabyMode>(
+    () => existing?.babyId ?? prefill.babyId ?? "both",
+  );
+  const [foodId, setFoodId] = useState<string | null>(() =>
+    existing
+      ? existing.foodId.startsWith("custom:")
+        ? null
+        : existing.foodId
+      : prefill.foodId ?? null,
+  );
+  const [customFood, setCustomFood] = useState<string>(() =>
+    existing && existing.foodId.startsWith("custom:") ? existing.foodName : "",
+  );
   const [query, setQuery] = useState("");
-  const [amount, setAmount] = useState<Amount>("some");
-  const [reaction, setReaction] = useState<Reaction>("liked");
-  const [notes, setNotes] = useState("");
-  const [flagged, setFlagged] = useState(false);
+  const [amount, setAmount] = useState<Amount>(() => existing?.amount ?? "some");
+  const [reaction, setReaction] = useState<Reaction>(
+    () => existing?.reaction ?? "liked",
+  );
+  const [notes, setNotes] = useState(() => existing?.notes ?? "");
+  const [flagged, setFlagged] = useState(() => existing?.flagged ?? false);
   const [closing, setClosing] = useState(false);
 
   // Lock body scroll while the sheet is open.
@@ -129,10 +150,23 @@ function LogSheet({
 
   function handleSave() {
     if (!canSave) return;
+    const fid = foodId ?? `custom:${selectedFoodName.toLowerCase()}`;
+    if (editing && prefill.entryId) {
+      updateEntry(prefill.entryId, {
+        babyId: babyMode === "both" ? existing!.babyId : babyMode,
+        foodId: fid,
+        foodName: selectedFoodName,
+        reaction,
+        amount,
+        notes: notes.trim() || undefined,
+        flagged: flagged || undefined,
+      });
+      close();
+      return;
+    }
     const date = isoDate();
     const babies: BabyId[] =
       babyMode === "both" ? ["autumn", "alma"] : [babyMode];
-    const fid = foodId ?? `custom:${selectedFoodName.toLowerCase()}`;
     for (const babyId of babies) {
       addEntry({
         date,
@@ -145,6 +179,11 @@ function LogSheet({
         flagged: flagged || undefined,
       });
     }
+    close();
+  }
+
+  function handleDelete() {
+    if (prefill.entryId) removeEntry(prefill.entryId);
     close();
   }
 
@@ -174,7 +213,7 @@ function LogSheet({
           <div className="mx-auto h-1 w-9 rounded-full bg-line" />
           <div className="mt-3 flex items-center justify-between">
             <h2 className="font-serif text-[1.35rem] text-ink">
-              Log a food
+              {editing ? "Edit food" : "Log a food"}
             </h2>
             <button
               onClick={close}
@@ -190,28 +229,32 @@ function LogSheet({
         <div className="min-h-0 flex-1 overflow-y-auto px-5 pt-4">
           {/* Who */}
           <Field label="Who">
-            <div className="grid grid-cols-3 gap-2">
+            <div
+              className={`grid gap-2 ${editing ? "grid-cols-2" : "grid-cols-3"}`}
+            >
               <ModeButton
                 active={babyMode === "autumn"}
                 onClick={() => setBabyMode("autumn")}
-                color="var(--color-autumn)"
+                color={autumn.colorVar}
               >
-                Autumn
+                {autumn.name}
               </ModeButton>
               <ModeButton
                 active={babyMode === "alma"}
                 onClick={() => setBabyMode("alma")}
-                color="var(--color-alma)"
+                color={alma.colorVar}
               >
-                Alma
+                {alma.name}
               </ModeButton>
-              <ModeButton
-                active={babyMode === "both"}
-                onClick={() => setBabyMode("both")}
-                color="var(--color-amber)"
-              >
-                Both
-              </ModeButton>
+              {!editing && (
+                <ModeButton
+                  active={babyMode === "both"}
+                  onClick={() => setBabyMode("both")}
+                  color="var(--color-amber)"
+                >
+                  Both
+                </ModeButton>
+              )}
             </div>
           </Field>
 
@@ -385,8 +428,20 @@ function LogSheet({
             disabled={!canSave}
             className="w-full rounded-2xl bg-ink py-3.5 text-[15px] font-medium text-paper-raised transition-all active:scale-[0.99] disabled:cursor-not-allowed disabled:bg-line disabled:text-ink-faint"
           >
-            {babyMode === "both" ? "Save for both" : "Save"}
+            {editing
+              ? "Save changes"
+              : babyMode === "both"
+                ? "Save for both"
+                : "Save"}
           </button>
+          {editing && (
+            <button
+              onClick={handleDelete}
+              className="mt-2 w-full rounded-2xl py-3 text-[14px] font-medium text-alert transition-colors active:bg-alert-tint"
+            >
+              Delete this entry
+            </button>
+          )}
         </div>
       </div>
     </div>

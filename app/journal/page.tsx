@@ -3,7 +3,8 @@
 import { useMemo, useState } from "react";
 import { useStore } from "@/lib/store";
 import { dayLabel } from "@/lib/date";
-import { BABIES, BabyId, LogEntry } from "@/lib/types";
+import { BabyId, LogEntry } from "@/lib/types";
+import { useProfiles } from "@/lib/profiles";
 import { Card } from "@/components/common";
 import { EntryRow } from "@/components/EntryRow";
 import { AllergenTracker } from "@/components/AllergenTracker";
@@ -74,7 +75,7 @@ export default function JournalPage() {
         <FilterTab active={filter === "all"} onClick={() => setFilter("all")}>
           Both
         </FilterTab>
-        {BABIES.map((b) => (
+        {useProfiles().map((b) => (
           <FilterTab
             key={b.id}
             active={filter === b.id}

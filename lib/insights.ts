@@ -335,13 +335,16 @@ export function scoreLabel(overall: number): string {
 
 // ─── Insight generation (deterministic, ranked) ──────────────────────────────
 
-function subjectLabel(scope: Scope): string {
+type BabyNames = Partial<Record<BabyId, string>>;
+
+function subjectLabel(scope: Scope, names?: BabyNames): string {
   if (scope === "both") return "The girls";
-  return BABIES.find((b) => b.id === scope)?.name ?? scope;
+  return names?.[scope] ?? BABIES.find((b) => b.id === scope)?.name ?? scope;
 }
-function possessiveLabel(scope: Scope): string {
+function possessiveLabel(scope: Scope, names?: BabyNames): string {
   if (scope === "both") return "Their";
-  return `${BABIES.find((b) => b.id === scope)?.name ?? scope}'s`;
+  const nm = names?.[scope] ?? BABIES.find((b) => b.id === scope)?.name ?? scope;
+  return `${nm}'s`;
 }
 const auxHasHave = (scope: Scope) => (scope === "both" ? "haven't" : "hasn't");
 
@@ -349,6 +352,7 @@ export function generateInsights(
   entries: LogEntry[],
   scope: Scope,
   groups: GroupScore[],
+  names?: BabyNames,
 ): Insight[] {
   if (entries.length === 0) {
     return [
@@ -361,7 +365,7 @@ export function generateInsights(
     ];
   }
 
-  const who = subjectLabel(scope);
+  const who = subjectLabel(scope, names);
   const candidates: (Insight & { rank: number })[] = [];
 
   // Safety: a flagged reaction outranks everything actionable.
@@ -400,7 +404,7 @@ export function generateInsights(
   if (weakest && weakest.score < 5) {
     candidates.push({
       id: "weak",
-      text: `${possessiveLabel(scope)} ${weakest.label.toLowerCase()} could use some variety — ${weakest.tried} of ${LIB_COUNT[weakest.key]} tried.`,
+      text: `${possessiveLabel(scope, names)} ${weakest.label.toLowerCase()} could use some variety — ${weakest.tried} of ${LIB_COUNT[weakest.key]} tried.`,
       tone: "neutral",
       href: "/foods",
       rank: 40 + (5 - weakest.score) * 4,
@@ -449,7 +453,11 @@ export function generateInsights(
 
 // ─── Aggregate ───────────────────────────────────────────────────────────────
 
-export function buildDashboard(all: LogEntry[], scope: Scope): DashboardData {
+export function buildDashboard(
+  all: LogEntry[],
+  scope: Scope,
+  names?: BabyNames,
+): DashboardData {
   const e = scopeEntries(all, scope);
   const groups = [...foodGroupScores(e), allergenGroupScore(e, scope)];
   const acceptance = acceptanceRate(e);
@@ -464,7 +472,7 @@ export function buildDashboard(all: LogEntry[], scope: Scope): DashboardData {
     week: newFoodsThisWeek(e),
     weekBars: newFoodsByWeek(e),
     top: topFoods(e),
-    insights: generateInsights(e, scope, groups),
+    insights: generateInsights(e, scope, groups, names),
     entryCount: e.length,
   };
 }

@@ -72,3 +72,28 @@ export function greeting(d: Date = new Date()): string {
   if (h < 21) return "Good evening";
   return "Good night";
 }
+
+/** Whole months between a birth date (yyyy-mm-dd) and today. */
+export function ageInMonths(birthday: string): number {
+  const b = fromIso(birthday);
+  const now = new Date();
+  let months =
+    (now.getFullYear() - b.getFullYear()) * 12 + (now.getMonth() - b.getMonth());
+  if (now.getDate() < b.getDate()) months -= 1;
+  return Math.max(0, months);
+}
+
+/** A short, human age: "9 days" · "6 weeks" · "7 mo" · "1 yr 2 mo". */
+export function ageLabel(birthday: string): string {
+  const b = fromIso(birthday);
+  const now = new Date();
+  const days = Math.max(0, Math.round((now.getTime() - b.getTime()) / 86_400_000));
+  if (days <= 1) return "newborn";
+  if (days < 14) return `${days} days`;
+  if (days < 56) return `${Math.floor(days / 7)} weeks`;
+  const months = ageInMonths(birthday);
+  if (months < 24) return `${months} mo`;
+  const yrs = Math.floor(months / 12);
+  const rem = months % 12;
+  return rem ? `${yrs} yr ${rem} mo` : `${yrs} yr`;
+}

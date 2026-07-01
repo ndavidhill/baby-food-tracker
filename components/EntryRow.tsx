@@ -7,10 +7,11 @@ import {
   BabyDot,
   Card,
   ReactionMeter,
-  babyName,
   reactionLabel,
 } from "./common";
+import { useProfile } from "@/lib/profiles";
 import { AlertIcon, TrashIcon } from "./icons";
+import { useLogSheet } from "./LogSheet";
 
 export function EntryRow({
   entry,
@@ -22,6 +23,8 @@ export function EntryRow({
   showBaby?: boolean;
 }) {
   const allergen = getFood(entry.foodId)?.allergen;
+  const { openLog } = useLogSheet();
+  const profile = useProfile(entry.babyId);
   return (
     <li className="group animate-rise">
       <Card
@@ -29,7 +32,19 @@ export function EntryRow({
           entry.flagged ? "border-alert-soft" : ""
         }`}
       >
-        <div className="min-w-0 flex-1">
+        <div
+          role="button"
+          tabIndex={0}
+          aria-label={`Edit ${entry.foodName}`}
+          onClick={() => openLog({ entryId: entry.id })}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              openLog({ entryId: entry.id });
+            }
+          }}
+          className="min-w-0 flex-1 cursor-pointer text-left"
+        >
           <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
             <span className="truncate text-[15px] font-medium text-ink">
               {entry.foodName}
@@ -51,7 +66,7 @@ export function EntryRow({
               <>
                 <span className="inline-flex items-center gap-1.5">
                   <BabyDot id={entry.babyId} />
-                  {babyName(entry.babyId)}
+                  {profile.name}
                 </span>
                 <span aria-hidden>·</span>
               </>

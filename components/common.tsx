@@ -1,4 +1,7 @@
+"use client";
+
 import { BABIES, BabyId, Reaction } from "@/lib/types";
+import { useProfile } from "@/lib/profiles";
 
 /** Monotonic "how well it went" scale, low → high. */
 const REACTION_LEVEL: Record<Reaction, number> = {
@@ -49,20 +52,22 @@ export function babyColor(id: BabyId): string {
 }
 
 export function BabyDot({ id, className = "" }: { id: BabyId; className?: string }) {
+  const profile = useProfile(id);
   return (
     <span
       className={`inline-block h-2 w-2 shrink-0 rounded-full ${className}`}
-      style={{ background: babyColor(id) }}
+      style={{ background: profile.colorVar }}
     />
   );
 }
 
 /** A small pill with the baby's name and colour dot. */
 export function BabyTag({ id }: { id: BabyId }) {
+  const profile = useProfile(id);
   return (
     <span className="inline-flex items-center gap-1.5 rounded-full bg-paper-sunk px-2.5 py-1 text-[12px] font-medium text-ink-soft">
       <BabyDot id={id} />
-      {babyName(id)}
+      {profile.name}
     </span>
   );
 }

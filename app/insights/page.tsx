@@ -13,7 +13,8 @@ import {
   Scope,
   scoreLabel,
 } from "@/lib/insights";
-import { BABIES } from "@/lib/types";
+import { BabyId } from "@/lib/types";
+import { useProfiles } from "@/lib/profiles";
 import { relativeDay } from "@/lib/date";
 import {
   Card,
@@ -78,15 +79,27 @@ const TONE: Record<
 
 export default function InsightsPage() {
   const { entries, ready } = useStore();
+  const profiles = useProfiles();
   const [scope, setScope] = useState<Scope>("both");
   const [showInfo, setShowInfo] = useState(false);
 
-  const data = useMemo(() => buildDashboard(entries, scope), [entries, scope]);
+  const names = useMemo(
+    () =>
+      Object.fromEntries(profiles.map((p) => [p.id, p.name])) as Partial<
+        Record<BabyId, string>
+      >,
+    [profiles],
+  );
+  const data = useMemo(
+    () => buildDashboard(entries, scope, names),
+    [entries, scope, names],
+  );
 
   if (!ready) return null;
 
   const empty = data.entryCount === 0;
-  const who = scope === "both" ? "the girls" : BABIES.find((b) => b.id === scope)?.name;
+  const who =
+    scope === "both" ? "the girls" : profiles.find((b) => b.id === scope)?.name;
   const d = data.week.delta;
   const weekSub =
     d > 0
@@ -111,7 +124,7 @@ export default function InsightsPage() {
         <FilterTab active={scope === "both"} onClick={() => setScope("both")}>
           Both
         </FilterTab>
-        {BABIES.map((b) => (
+        {profiles.map((b) => (
           <FilterTab
             key={b.id}
             active={scope === b.id}

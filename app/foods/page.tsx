@@ -8,7 +8,8 @@ import {
   CATEGORY_ORDER,
   FOODS,
 } from "@/lib/foods";
-import { BABIES, BabyId, Food } from "@/lib/types";
+import { BabyId, Food } from "@/lib/types";
+import { useProfile, useProfiles } from "@/lib/profiles";
 import { Card } from "@/components/common";
 import { PlusIcon } from "@/components/icons";
 
@@ -65,7 +66,7 @@ export default function FoodsPage() {
             </div>
           </div>
           <div className="space-y-1.5 text-right">
-            {BABIES.map((b) => (
+            {useProfiles().map((b) => (
               <div
                 key={b.id}
                 className="flex items-center justify-end gap-2 text-[12.5px] text-ink-soft"
@@ -172,7 +173,7 @@ function FoodRow({
       </div>
 
       <div className="flex shrink-0 items-center gap-1.5">
-        {BABIES.map((b) => (
+        {useProfiles().map((b) => (
           <StatusChip
             key={b.id}
             baby={b.id}
@@ -189,7 +190,7 @@ function FoodRow({
 }
 
 function StatusChip({ baby, done }: { baby: BabyId; done: boolean }) {
-  const info = BABIES.find((b) => b.id === baby)!;
+  const info = useProfile(baby);
   const initials = info.name.slice(0, 2);
   return (
     <span
