@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useLogSheet } from "./LogSheet";
 import {
+  InsightsIcon,
   JournalIcon,
   LeafIcon,
   PlusIcon,
@@ -14,6 +15,7 @@ const TABS = [
   { href: "/", label: "Today", Icon: SunriseIcon },
   { href: "/foods", label: "Foods", Icon: LeafIcon },
   { href: "/journal", label: "Journal", Icon: JournalIcon },
+  { href: "/insights", label: "Insights", Icon: InsightsIcon },
 ];
 
 export function BottomNav() {
@@ -36,7 +38,7 @@ export function BottomNav() {
             <PlusIcon className="h-6 w-6" />
           </button>
 
-          {TABS.slice(2).map((tab) => (
+          {TABS.slice(2, 4).map((tab) => (
             <Tab key={tab.href} tab={tab} pathname={pathname} />
           ))}
         </nav>

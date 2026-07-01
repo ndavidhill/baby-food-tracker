@@ -82,3 +82,60 @@ export function Card({
     </div>
   );
 }
+
+/** A thin progress track with a colour-parameterized fill. */
+export function ProgressBar({
+  value,
+  total,
+  color = "var(--color-amber)",
+  className = "",
+}: {
+  value: number;
+  total: number;
+  color?: string;
+  className?: string;
+}) {
+  const pct = total === 0 ? 0 : Math.round((value / total) * 100);
+  return (
+    <div
+      className={`h-1.5 w-full overflow-hidden rounded-full bg-paper-sunk ${className}`}
+    >
+      <div
+        className="h-full rounded-full transition-[width] duration-500"
+        style={{ width: `${pct}%`, background: color }}
+      />
+    </div>
+  );
+}
+
+/** A rounded pill toggle with an optional colour dot (for baby filters). */
+export function FilterTab({
+  active,
+  onClick,
+  color,
+  children,
+}: {
+  active: boolean;
+  onClick: () => void;
+  color?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={`inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-[13.5px] font-medium transition-all ${
+        active
+          ? "border-transparent bg-ink text-paper-raised"
+          : "border-line bg-paper text-ink-soft hover:border-amber-soft"
+      }`}
+    >
+      {color && (
+        <span
+          className="h-2 w-2 rounded-full"
+          style={{ background: active ? color : "var(--color-line)" }}
+        />
+      )}
+      {children}
+    </button>
+  );
+}

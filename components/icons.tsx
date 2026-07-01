@@ -124,3 +124,61 @@ export function SparkIcon(props: IconProps) {
     </svg>
   );
 }
+
+export function InsightsIcon(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M5 17a8 8 0 1 1 14 0" />
+      <path d="M12 13.5 15.5 9.5" />
+      <circle cx="12" cy="13.5" r="1" />
+    </svg>
+  );
+}
+
+export function SproutIcon(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M12 21V10.5" />
+      <path d="M12 12C9.4 12 7.8 10.4 7.8 7.8c2.6 0 4.2 1.6 4.2 4.2Z" />
+      <path d="M12 10.5c0-2.8 1.7-4.5 4.5-4.5C16.5 8.8 14.8 10.5 12 10.5Z" />
+    </svg>
+  );
+}
+
+export function AppleIcon(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M12 8.2C10.5 6.7 8 6.7 6.7 8.3c-1.3 1.6-1 4.3.3 6.4 1 1.6 2.3 3 3.5 3.6.9.4 2 .4 3 0 1.2-.6 2.5-2 3.5-3.6 1.3-2.1 1.6-4.8.3-6.4C16 6.7 13.5 6.7 12 8.2Z" />
+      <path d="M12 8.2V4.6" />
+      <path d="M12.3 5.7C13.1 4.5 14.4 4.1 15.7 4.3 15.7 5.6 14.7 6.7 13.3 6.9" />
+    </svg>
+  );
+}
+
+export function WheatIcon(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M12 21v-9.5" />
+      <path d="M12 11.5c1.7-.4 2.7-1.8 2.9-3.7C13.1 8.2 12 9.5 12 11.5Z" />
+      <path d="M12 11.5c-1.7-.4-2.7-1.8-2.9-3.7C10.9 8.2 12 9.5 12 11.5Z" />
+      <path d="M12 8c1.7-.4 2.7-1.8 2.9-3.7C13.1 4.7 12 6 12 8Z" />
+      <path d="M12 8c-1.7-.4-2.7-1.8-2.9-3.7C10.9 4.7 12 6 12 8Z" />
+    </svg>
+  );
+}
+
+export function EggIcon(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M12 3.5c-3.2 0-5.8 4.6-5.8 9a5.8 5.8 0 0 0 11.6 0c0-4.4-2.6-9-5.8-9Z" />
+    </svg>
+  );
+}
+
+export function DropIcon(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M12 3.5s5.8 6.3 5.8 10.5a5.8 5.8 0 0 1-11.6 0C6.2 9.8 12 3.5 12 3.5Z" />
+    </svg>
+  );
+}

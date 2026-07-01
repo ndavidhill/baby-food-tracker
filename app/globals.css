@@ -26,6 +26,14 @@
   --color-alert-soft: #d99f92;
   --color-alert-tint: #f0dcd4;
 
+  /* Food-group accents — muted, warm, "Daylight"-calm (not pastel) */
+  --color-cat-veg: #7c8a5a;
+  --color-cat-fruit: #b47a86;
+  --color-cat-grain: #c2a05e;
+  --color-cat-protein: #b07a5a;
+  --color-cat-dairy: #7f93a0;
+  --color-cat-allergen: #b26a4e;
+
   --font-serif: var(--font-fraunces), Georgia, "Times New Roman", serif;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 

@@ -21,6 +21,10 @@ cartoons, just paper-warm tones and quiet typography.
     sesame, wheat, soy, tree nuts, fish, shellfish). For each twin it shows whether
     it's been introduced, how many times it's been offered and when last, a gentle
     *"offer again"* nudge when it's been over a week, and any flagged reactions.
+- **Insights** — a calm analytical dashboard. A segmented "exploration score" ring
+  (a positive, non-medical 0–10 measure of variety, food-group balance, freshness, and
+  allergen progress), a per-food-group breakdown, deterministic nudges, favourites and
+  acceptance, a logging streak, and a weekly new-foods trend — all filterable by twin.
 
 Every meal captures **who** (Autumn, Alma, or both), **what**, **how much**
 (a taste / some / lots), **how it went** (a calm five-point scale), an optional
