@@ -184,6 +184,10 @@ create policy en_update on public.entries
 drop policy if exists inv_none on public.household_invites;
 create policy inv_none on public.household_invites for all using (false) with check (false);
 
--- ── Realtime ────────────────────────────────────────────────────────────────
-alter publication supabase_realtime add table public.entries;
-alter publication supabase_realtime add table public.profiles;
+-- ── Realtime (idempotent: safe to re-run) ───────────────────────────────────
+do $$ begin
+  alter publication supabase_realtime add table public.entries;
+exception when duplicate_object then null; end $$;
+do $$ begin
+  alter publication supabase_realtime add table public.profiles;
+exception when duplicate_object then null; end $$;
