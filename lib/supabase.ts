@@ -1,7 +1,9 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
-const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+// Strip whitespace (incl. line-wraps from pasting into dashboards): a stray
+// newline in the key/URL makes every fetch throw TypeError in the browser.
+const url = process.env.NEXT_PUBLIC_SUPABASE_URL?.replace(/\s+/g, "");
+const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.replace(/\s+/g, "");
 
 /** True only when both public env vars are present. */
 export const isSupabaseConfigured = Boolean(url && anon);
