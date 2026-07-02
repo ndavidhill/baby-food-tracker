@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Inter } from "next/font/google";
+import { Inter } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { StoreProvider } from "@/lib/store";
 import { AuthProvider } from "@/lib/auth";
@@ -7,11 +8,11 @@ import { ProfilesProvider } from "@/lib/profiles";
 import { LogSheetProvider } from "@/components/LogSheet";
 import { BottomNav } from "@/components/BottomNav";
 
-const fraunces = Fraunces({
-  subsets: ["latin"],
-  variable: "--font-fraunces",
+const romie = localFont({
+  src: "./fonts/Romie-Regular.woff2",
+  weight: "400",
+  variable: "--font-romie",
   display: "swap",
-  axes: ["opsz", "SOFT", "WONK"],
 });
 
 const inter = Inter({
@@ -45,7 +46,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${fraunces.variable} ${inter.variable}`}>
+    <html lang="en" className={`${romie.variable} ${inter.variable}`}>
       <body>
         <AuthProvider>
           <ProfilesProvider>
